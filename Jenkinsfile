@@ -9,8 +9,16 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'sbt package'
-        archiveArtifacts(artifacts: 'target/scala-*/*.jar', fingerprint: true, onlyIfSuccessful: true)
+        sh 'sbt publishLocal'
+        archiveArtifacts(artifacts: 'target/scala-*/*', fingerprint: true, onlyIfSuccessful: true)
+      }
+    }
+    stage('Deploy') {
+      steps {
+        script {
+          def server = Artifactory.server 'artifactory'
+        }
+        
       }
     }
   }

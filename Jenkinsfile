@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker {
       image 'lolhens/sbt:latest'
-      args '-u root --name sbt'
+      args '-u root'
     }
     
   }
@@ -16,7 +16,9 @@ pipeline {
     stage('Deploy') {
       steps {
         script {
-          
+          {
+            
+          }
         }
         
       }

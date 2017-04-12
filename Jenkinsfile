@@ -7,9 +7,14 @@ pipeline {
     
   }
   stages {
-    stage('Compile') {
+    stage('Package') {
       steps {
-        sh 'sbt compile'
+        sh 'sbt package'
+      }
+    }
+    stage('Collect Artifacts') {
+      steps {
+        archiveArtifacts(artifacts: 'target/scala-*/*.jar', onlyIfSuccessful: true, fingerprint: true)
       }
     }
   }

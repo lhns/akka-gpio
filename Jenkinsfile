@@ -10,6 +10,7 @@ pipeline {
     stage('Build') {
       steps {
         sh 'sbt publishLocal'
+        archiveArtifacts(artifacts: 'target/releases/default/*', onlyIfSuccessful: true, fingerprint: true)
       }
     }
     stage('Deploy') {

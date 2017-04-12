@@ -6,9 +6,9 @@ pipeline {
     
   }
   stages {
-    stage('Install SBT') {
+    stage('Compile') {
       steps {
-        sh 'ls -la'
+        sh 'sbt compile'
       }
     }
   }

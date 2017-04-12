@@ -8,7 +8,11 @@ pipeline {
   stages {
     stage('Compile') {
       steps {
-        sh 'sbt'
+        sh '''echo $HOME
+echo $sbt_version
+echo $sbt_home
+
+#sbt'''
       }
     }
   }

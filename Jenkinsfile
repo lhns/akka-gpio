@@ -11,6 +11,7 @@ pipeline {
         sh '''echo $HOME
 echo $sbt_version
 echo $sbt_home
+whoami
 
 #sbt'''
       }

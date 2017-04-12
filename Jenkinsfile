@@ -10,7 +10,6 @@ pipeline {
     stage('Build') {
       steps {
         sh 'sbt publishLocal'
-        archiveArtifacts(artifacts: 'target1/scala-*/*', fingerprint: true, onlyIfSuccessful: true)
       }
     }
     stage('Deploy') {
@@ -21,8 +20,8 @@ pipeline {
           def uploadSpec = """{
             "files": [
               {
-                "pattern": "*",
-                "target": "test/asdf/"
+                "pattern": "target/releases/default",
+                "target": "test/org/lolhens"
               }
             ]
           }"""

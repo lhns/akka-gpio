@@ -10,7 +10,7 @@ pipeline {
     stage('Build') {
       steps {
         sh 'sbt publishLocal'
-        archiveArtifacts(artifacts: 'target/scala-*/*', fingerprint: true, onlyIfSuccessful: true)
+        archiveArtifacts(artifacts: 'target1/scala-*/*', fingerprint: true, onlyIfSuccessful: true)
       }
     }
     stage('Deploy') {

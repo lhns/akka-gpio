@@ -4,10 +4,6 @@ pipeline {
     stage('Install SBT') {
       steps {
         tool 'default-sbt'
-      }
-    }
-    stage('Compile') {
-      steps {
         sh 'sbt compile'
       }
     }

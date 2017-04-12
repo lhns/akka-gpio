@@ -13,15 +13,5 @@ pipeline {
         archiveArtifacts(artifacts: 'target/scala-*/*.jar', fingerprint: true, onlyIfSuccessful: true)
       }
     }
-    stage('Deploy') {
-      steps {
-        script {
-          {
-            
-          }
-        }
-        
-      }
-    }
   }
 }

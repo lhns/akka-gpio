@@ -16,23 +16,8 @@ class GpioConnection(gpioController: GpioController,
   private val (input, output) = (PinMode.DIGITAL_INPUT, PinMode.DIGITAL_OUTPUT)
   private val pullDown = PinPullResistance.PULL_DOWN
 
-  case class ProvisionedPin(pin: Int, state: Option[Boolean]) {
-    val gpioPin: GpioPinDigitalOutput = state match {
-      case Some(high) =>
-        val gpioPin = gpioController.provisionDigitalMultipurposePin(pins(pin), output, pullDown)
-        gpioPin.setState(high)
-        gpioPin
-
-      case None =>
-        gpioController.provisionDigitalMultipurposePin(pins(pin), input, pullDown)
-    }
-
-    self ! StateChanged(pin, state.getOrElse(gpioPin.isHigh))
-
-    gpioPin.addListener(new GpioPinListenerDigital {
-      override def handleGpioPinDigitalStateChangeEvent(event: GpioPinDigitalStateChangeEvent): Unit =
-        self ! StateChanged(pin, event.getState.isHigh)
-    })
+  case class ProvisionedPin(gpioPin: GpioPinDigitalOutput, state: Option[Boolean]) {
+    def isHigh: Boolean = gpioPin.isHigh
 
     def setState(newState: Option[Boolean]): ProvisionedPin =
       if (newState != state) {
@@ -46,10 +31,29 @@ class GpioConnection(gpioController: GpioController,
             gpioPin.setMode(input)
         }
 
-        self ! StateChanged(pin, newState.getOrElse(gpioPin.isHigh))
-
         copy(state = newState)
       } else this
+  }
+
+  object ProvisionedPin {
+    def apply(pin: Int, state: Option[Boolean]): ProvisionedPin = {
+      val gpioPin: GpioPinDigitalOutput = state match {
+        case Some(high) =>
+          val gpioPin = gpioController.provisionDigitalMultipurposePin(pins(pin), output, pullDown)
+          gpioPin.setState(high)
+          gpioPin
+
+        case None =>
+          gpioController.provisionDigitalMultipurposePin(pins(pin), input, pullDown)
+      }
+
+      gpioPin.addListener(new GpioPinListenerDigital {
+        override def handleGpioPinDigitalStateChangeEvent(event: GpioPinDigitalStateChangeEvent): Unit =
+          self ! StateChanged(pin, event.getState.isHigh)
+      })
+
+      ProvisionedPin(gpioPin, state)
+    }
   }
 
   var provisionedPins: Map[Int, ProvisionedPin] = Map.empty
@@ -76,12 +80,14 @@ class GpioConnection(gpioController: GpioController,
         .filter(e => pins.contains(e._1))
         .foreach {
           case (pin, state) =>
-            provisionedPins += (pin -> {
-              provisionedPins.get(pin) match {
-                case Some(provisionedPin) => provisionedPin.setState(state)
-                case None => ProvisionedPin(pin, state)
-              }
-            })
+            val provisionedPin = provisionedPins.get(pin) match {
+              case Some(provisionedPin) => provisionedPin.setState(state)
+              case None => ProvisionedPin(pin, state)
+            }
+
+            provisionedPins += (pin -> provisionedPin)
+
+            self ! StateChanged(pin, state.getOrElse(provisionedPin.isHigh))
         }
   }
 }

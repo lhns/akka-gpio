@@ -17,6 +17,17 @@ pipeline {
       steps {
         script {
           def server = Artifactory.server 'artifactory'
+          
+          def uploadSpec = """{
+            "files": [
+              {
+                "pattern": "*",
+                "target": "test/asdf/"
+              }
+            ]
+          }"""
+          
+          server.upload(uploadSpec)
         }
         
       }

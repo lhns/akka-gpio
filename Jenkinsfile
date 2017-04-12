@@ -1,10 +1,14 @@
 pipeline {
-  agent any
+  agent {
+    docker {
+      image 'lolhens/sbt:latest'
+    }
+    
+  }
   stages {
     stage('Install SBT') {
       steps {
-        tool 'default-sbt'
-        sh 'ls -R /'
+        sh 'echo $PATH'
       }
     }
   }

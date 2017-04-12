@@ -1,9 +1,14 @@
 pipeline {
   agent any
   stages {
+    stage('Install SBT') {
+      steps {
+        tool 'default-sbt'
+      }
+    }
     stage('Compile') {
       steps {
-        tool(name: 'default-sbt', type: 'compile')
+        sh 'sbt compile'
       }
     }
   }

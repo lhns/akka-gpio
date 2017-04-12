@@ -2,6 +2,7 @@ pipeline {
   agent {
     docker {
       image 'lolhens/sbt:latest'
+      args '-u root'
     }
     
   }

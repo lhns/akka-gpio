@@ -7,14 +7,18 @@ pipeline {
     
   }
   stages {
-    stage('Compile') {
+    stage('Build') {
       steps {
         sh 'sbt package'
+        archiveArtifacts(artifacts: 'target/scala-*/*.jar', fingerprint: true, onlyIfSuccessful: true)
       }
     }
-    stage('Archive Artifacts') {
+    stage('Deploy') {
       steps {
-        archiveArtifacts(artifacts: 'target/scala-*/*.jar', onlyIfSuccessful: true, fingerprint: true)
+        script {
+          
+        }
+        
       }
     }
   }

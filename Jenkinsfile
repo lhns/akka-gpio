@@ -10,7 +10,7 @@ pipeline {
     stage('Build') {
       steps {
         sh 'sbt publish'
-        archiveArtifacts(artifacts: 'target/releases/default/*', onlyIfSuccessful: true, fingerprint: true)
+        archiveArtifacts(artifacts: 'target/releases/*', onlyIfSuccessful: true, fingerprint: true)
       }
     }
     stage('Deploy') {
@@ -21,7 +21,7 @@ pipeline {
           def uploadSpec = """{
             "files": [
               {
-                "pattern": "target/releases/default",
+                "pattern": "target/releases",
                 "target": "test/org/lolhens"
               }
             ]

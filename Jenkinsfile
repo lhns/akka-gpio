@@ -8,7 +8,7 @@ pipeline {
   stages {
     stage('Install SBT') {
       steps {
-        sh 'echo $PATH'
+        sh 'ls -la'
       }
     }
   }

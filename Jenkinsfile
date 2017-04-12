@@ -2,19 +2,14 @@ pipeline {
   agent {
     docker {
       image 'lolhens/sbt:latest'
-      args '-u root'
+      args '-u root --name sbt'
     }
     
   }
   stages {
     stage('Compile') {
       steps {
-        sh '''echo $HOME
-echo $sbt_version
-echo $sbt_home
-whoami
-
-#sbt'''
+        sh 'sbt compile'
       }
     }
   }

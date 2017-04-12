@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Compile') {
       steps {
-        tool 'default-sbt'
+        tool 'default-sbt compile'
       }
     }
   }

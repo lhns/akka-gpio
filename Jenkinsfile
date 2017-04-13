@@ -35,7 +35,8 @@ pipeline {
   repository-config: ${sbt.repository.config-${sbt.global.base-${user.home}/.sbt}/repositories}
 '>>sbt.boot.properties
 
-sbt -Dsbt.boot.properties="sbt.boot.properties" publish
+#sbt -Dsbt.boot.properties="sbt.boot.properties" publish
+sbt -Dsbt.repositories.typesafe-ivy-releases="http://lolhens.no-ip.org/artifactory/maven-public/" publish
 '''
         archiveArtifacts(artifacts: 'target/releases/*/*/*/*', onlyIfSuccessful: true)
         sh '''ls target/releases/*/*/*/*

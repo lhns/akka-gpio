@@ -2,6 +2,7 @@ package org.lolhens.akka.gpio
 
 import akka.actor.{Actor, ActorRef, ActorRefFactory, Props}
 import com.pi4j.io.gpio.{GpioController, GpioFactory}
+import com.pi4j.wiringpi.GpioUtil
 import org.lolhens.akka.gpio.Gpio._
 
 import scala.util.control.NonFatal
@@ -14,6 +15,7 @@ class GpioManager extends Actor {
   var gpioConnections: Map[GpioHeader, ActorRef] = Map.empty
 
   lazy val gpioControllerTry: Try[GpioController] = try {
+    Try(GpioUtil.enableNonPrivilegedAccess())
     Success(GpioFactory.getInstance())
   } catch {
     case NonFatal(exception) => Failure(exception)

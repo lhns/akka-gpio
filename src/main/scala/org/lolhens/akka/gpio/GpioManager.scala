@@ -36,7 +36,6 @@ class GpioManager extends Actor {
         } yield (connection, pins)
       } match {
         case Success((connection, pins)) =>
-          connection ! Register(listener)
           listener tell(Connected(pins.keySet), connection)
 
         case Failure(exception) =>

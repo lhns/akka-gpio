@@ -17,7 +17,7 @@ object Gpio extends ExtensionId[GpioExt] with ExtensionIdProvider {
 
   case class ConnectDigital(gpioHeader: GpioHeader) extends Command
 
-  private[gpio] case class Register(ref: ActorRef) extends Command
+  case class Register(ref: ActorRef) extends Command
 
   case class CommandFailed(command: Command, reason: Throwable) extends Event
 

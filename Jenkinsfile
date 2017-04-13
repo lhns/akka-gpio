@@ -9,7 +9,7 @@ pipeline {
   stages {
     stage('Clean') {
       steps {
-        sh '''sbt clean
+        sh '''sbt -no-colors clean
 '''
       }
     }
@@ -21,7 +21,7 @@ pipeline {
   artifactory: http://lolhens.no-ip.org/artifactory/maven-public/
 '>repositories
 '''
-        sh '''sbt -Dsbt.repository.config=repositories publish
+        sh '''sbt -no-colors -Dsbt.repository.config=repositories publish
 '''
       }
     }

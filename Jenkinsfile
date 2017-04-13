@@ -32,15 +32,17 @@ pipeline {
             script {
               def server = Artifactory.server 'artifactory'
               
+              def repository = "local-releases"
+              
               def uploadSpec = """{
                 "files": [
                   {
                     "pattern": "target/releases/(*)/*.jar",
-                    "target": "test/{1}/"
+                    "target": "$(repository)/{1}/"
                   },
                   {
                     "pattern": "target/releases/(*)/*.pom",
-                    "target": "test/{1}/"
+                    "target": "$(repository)/{1}/"
                   }
                 ]
               }"""

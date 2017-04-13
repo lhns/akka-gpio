@@ -11,6 +11,7 @@ pipeline {
       steps {
         sh 'sbt publish'
         archiveArtifacts(artifacts: 'target/releases/*', onlyIfSuccessful: true, fingerprint: true)
+        sh 'ls target/releases'
       }
     }
     stage('Deploy') {

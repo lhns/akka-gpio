@@ -18,6 +18,7 @@ pipeline {
 
 printenv
 
+sbt clean
 #sbt -Dsbt.boot.properties="sbt.boot.properties" publish
 sbt -Dsbt.repository.config=repositories publish
 '''

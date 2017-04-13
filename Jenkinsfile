@@ -27,6 +27,7 @@ echo target/releases/akka-gpio/akka-gpio_2.12/1.0.0'''
     stage('Deploy') {
       steps {
         script {
+          
           def server = Artifactory.server 'artifactory'
           
           def uploadSpec = """{
@@ -37,14 +38,6 @@ echo target/releases/akka-gpio/akka-gpio_2.12/1.0.0'''
               },
               {
                 "pattern": "target/releases/*/(*)/(*)/*.pom",
-                "target": "test/org/lolhens/{1}/{2}/"
-              },
-              {
-                "pattern": "target/releases/*/(*)/(*)/*.md5",
-                "target": "test/org/lolhens/{1}/{2}/"
-              },
-              {
-                "pattern": "target/releases/*/(*)/(*)/*.sha1",
                 "target": "test/org/lolhens/{1}/{2}/"
               }
             ]

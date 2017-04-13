@@ -9,7 +9,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh '''echo "[scala]
+        sh '''echo '[scala]
   version: ${sbt.scala.version-auto}
 
 [app]
@@ -31,7 +31,7 @@ pipeline {
   ivy-home: ${sbt.ivy.home-${user.home}/.ivy2/}
   checksums: ${sbt.checksums-sha1,md5}
   override-build-repos: ${sbt.override.build.repos-false}
-  repository-config: ${sbt.repository.config-${sbt.global.base-${user.home}/.sbt}/repositories}">>sbt.boot.properties
+  repository-config: ${sbt.repository.config-${sbt.global.base-${user.home}/.sbt}/repositories}'>>sbt.boot.properties
 
 sbt -Dsbt.boot.properties="sbt.boot.properties" publish'''
         archiveArtifacts(artifacts: 'target/releases/*/*/*/*', onlyIfSuccessful: true)

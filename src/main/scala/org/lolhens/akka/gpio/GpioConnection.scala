@@ -6,6 +6,8 @@ import com.pi4j.io.gpio._
 import com.pi4j.io.gpio.event.{GpioPinDigitalStateChangeEvent, GpioPinListenerDigital}
 import org.lolhens.akka.gpio.Gpio.{GetState, Register, SetState, StateChanged}
 
+import scala.util.Try
+
 /**
   * Created by pierr on 07.04.2017.
   */
@@ -28,6 +30,7 @@ class GpioConnection(gpioController: GpioController,
             gpioPin.setState(high)
 
           case None =>
+            Try(gpioPin.setPullResistance(pullDown))
             gpioPin.setMode(input)
         }
 
@@ -44,7 +47,9 @@ class GpioConnection(gpioController: GpioController,
           gpioPin
 
         case None =>
-          gpioController.provisionDigitalMultipurposePin(pins(pin), input, pullDown)
+          val gpioPin = gpioController.provisionDigitalMultipurposePin(pins(pin), input)
+          Try(gpioPin.setPullResistance(pullDown))
+          gpioPin
       }
 
       gpioPin.addListener(new GpioPinListenerDigital {

@@ -33,12 +33,9 @@ echo target/releases/akka-gpio/akka-gpio_2.12/1.0.0'''
           def uploadSpec = """{
             "files": [
               {
-                "pattern": "target/releases/*/(*)/(*)/*.jar",
-                "target": "test/org/lolhens/{1}/{2}/"
-              },
-              {
-                "pattern": "target/releases/*/(*)/(*)/*.pom",
-                "target": "test/org/lolhens/{1}/{2}/"
+                "pattern": "target/releases/(.*)/.*(jar|pom)",
+                "target": "test/org/lolhens/{1}/",
+                "regexp": "true"
               }
             ]
           }"""

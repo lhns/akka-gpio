@@ -11,26 +11,32 @@ import scala.util.Try
 /**
   * Created by pierr on 07.04.2017.
   */
-class GpioConnection(gpioController: GpioController,
-                     pins: Map[Int, Pin]) extends Actor {
+class DigitalGpioConnection(gpioController: GpioController,
+                            pins: Map[Int, Pin],
+                            pull: Option[Boolean],
+                            inverted: Boolean) extends Actor {
   var eventRouter = Router(BroadcastRoutingLogic())
 
   private val (input, output) = (PinMode.DIGITAL_INPUT, PinMode.DIGITAL_OUTPUT)
-  private val pullDown = PinPullResistance.PULL_DOWN
+  private val pullResistance = pull.map(_ ^ inverted) match {
+    case None => PinPullResistance.OFF
+    case Some(true) => PinPullResistance.PULL_UP
+    case Some(false) => PinPullResistance.PULL_DOWN
+  }
 
   case class ProvisionedPin(gpioPin: GpioPinDigitalOutput, state: Option[Boolean]) {
-    def isHigh: Boolean = gpioPin.isHigh
+    def signal: Boolean = gpioPin.isHigh ^ inverted
 
     def setState(newState: Option[Boolean]): ProvisionedPin =
       if (newState != state) {
         newState match {
-          case Some(high) =>
+          case Some(signal) =>
             if (state.isEmpty)
               gpioPin.setMode(output)
-            gpioPin.setState(high)
+            gpioPin.setState(signal ^ inverted)
 
           case None =>
-            Try(gpioPin.setPullResistance(pullDown))
+            Try(gpioPin.setPullResistance(pullResistance))
             gpioPin.setMode(input)
         }
 
@@ -48,13 +54,15 @@ class GpioConnection(gpioController: GpioController,
 
         case None =>
           val gpioPin = gpioController.provisionDigitalMultipurposePin(pins(pin), input)
-          Try(gpioPin.setPullResistance(pullDown))
+          Try(gpioPin.setPullResistance(pullResistance))
           gpioPin
       }
 
       gpioPin.addListener(new GpioPinListenerDigital {
-        override def handleGpioPinDigitalStateChangeEvent(event: GpioPinDigitalStateChangeEvent): Unit =
-          self ! StateChanged(pin, event.getState.isHigh)
+        override def handleGpioPinDigitalStateChangeEvent(event: GpioPinDigitalStateChangeEvent): Unit = {
+          val signal = event.getState.isHigh ^ inverted
+          self ! StateChanged(pin, signal)
+        }
       })
 
       ProvisionedPin(gpioPin, state)
@@ -92,7 +100,7 @@ class GpioConnection(gpioController: GpioController,
 
             provisionedPins += (pin -> provisionedPin)
 
-            self ! StateChanged(pin, state.getOrElse(provisionedPin.isHigh))
+            self ! StateChanged(pin, state.getOrElse(provisionedPin.signal))
         }
 
     case GetState(pins@_*) =>
@@ -100,12 +108,16 @@ class GpioConnection(gpioController: GpioController,
   }
 }
 
-object GpioConnection {
+object DigitalGpioConnection {
   private[gpio] def props(gpioController: GpioController,
-                          pins: Map[Int, Pin]) = Props(new GpioConnection(gpioController, pins))
+                          pins: Map[Int, Pin],
+                          pull: Option[Boolean],
+                          inverted: Boolean) = Props(new DigitalGpioConnection(gpioController, pins, pull, inverted))
 
   private[gpio] def actor(gpioController: GpioController,
-                          pins: Map[Int, Pin])
+                          pins: Map[Int, Pin],
+                          pull: Option[Boolean],
+                          inverted: Boolean)
                          (implicit actorRefFactory: ActorRefFactory): ActorRef =
-    actorRefFactory.actorOf(props(gpioController, pins))
+    actorRefFactory.actorOf(props(gpioController, pins, pull, inverted))
 }

@@ -15,7 +15,14 @@ object Gpio extends ExtensionId[GpioExt] with ExtensionIdProvider {
 
   trait Event
 
-  case class ConnectDigital(gpioHeader: GpioHeader) extends Command
+  case class ConnectDigital(gpioHeader: GpioHeader,
+                            pull: Option[Boolean] = Some(false),
+                            inverted: Boolean = false) extends Command
+
+  /*
+  TODO: Not supported yet
+   */
+  case class ConnectAnalog(gpioHeader: GpioHeader) extends Command
 
   case class Register(ref: ActorRef) extends Command
 

@@ -21,7 +21,7 @@ class GpioManager extends Actor {
   }
 
   override def receive: Receive = {
-    case connect@ConnectDigital(gpioHeader) =>
+    case connect@ConnectDigital(gpioHeader, pull, inverted) =>
       val listener = sender()
 
       {
@@ -29,7 +29,7 @@ class GpioManager extends Actor {
           gpioController <- gpioControllerTry
           pins <- gpioHeader.pins
           connection = gpioConnections.getOrElse(gpioHeader, {
-            val connection: ActorRef = GpioConnection.actor(gpioController, pins)
+            val connection: ActorRef = DigitalGpioConnection.actor(gpioController, pins, pull, inverted)
             gpioConnections += (gpioHeader -> connection)
             connection
           })

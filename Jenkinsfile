@@ -12,7 +12,7 @@ pipeline {
         sh '''echo '
 [repositories]
   local
-  typesafe-ivy-releases: http://lolhens.no-ip.org/artifactory/typesafe-ivy-releases/
+  artifactory-ivy: http://lolhens.no-ip.org/artifactory/maven-public/, [organization]/[module]/[revision]/[type]s/[artifact](-[classifier]).[ext], bootOnly
   artifactory: http://lolhens.no-ip.org/artifactory/maven-public/
 '>repositories
 

@@ -24,7 +24,7 @@ echo target/releases/akka-gpio/akka-gpio_2.12/1.0.0'''
             "files": [
               {
                 "pattern": "target/releases/*/*/*/*",
-                "target": "test/org/lolhens"
+                "target": "test/org/lolhens/"
               }
             ]
           }"""

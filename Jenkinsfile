@@ -7,7 +7,7 @@ pipeline {
     
   }
   stages {
-    stage('Clean') {
+    stage('Setup') {
       steps {
         sh '''echo '[repositories]
   local
@@ -15,6 +15,10 @@ pipeline {
   artifactory: http://lolhens.no-ip.org/artifactory/maven-public/
 '>repositories
 '''
+      }
+    }
+    stage('Clean') {
+      steps {
         sh 'sbt clean'
       }
     }

@@ -15,12 +15,14 @@ pipeline {
 [app]
   org: ${sbt.organization-org.scala-sbt}
   name: sbt
-  version: ${sbt.version-read(sbt.version)[0.13.5]}
+  version: ${sbt.version-read(sbt.version)[0.13.15]}
   class: ${sbt.main.class-sbt.xMain}
   components: xsbti,extra
   cross-versioned: ${sbt.cross.versioned-false}
+  resources: ${sbt.extraClasspath-}
 
 [repositories]
+  local
   Artifactory: http://lolhens.no-ip.org/artifactory/maven-public/
 
 [boot]
@@ -30,7 +32,8 @@ pipeline {
   ivy-home: ${sbt.ivy.home-${user.home}/.ivy2/}
   checksums: ${sbt.checksums-sha1,md5}
   override-build-repos: ${sbt.override.build.repos-false}
-  repository-config: ${sbt.repository.config-${sbt.global.base-${user.home}/.sbt}/repositories}'>>sbt.boot.properties
+  repository-config: ${sbt.repository.config-${sbt.global.base-${user.home}/.sbt}/repositories}
+'>>sbt.boot.properties
 
 sbt -Dsbt.boot.properties="sbt.boot.properties" publish
 '''

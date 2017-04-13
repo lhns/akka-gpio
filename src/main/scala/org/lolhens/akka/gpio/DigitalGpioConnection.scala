@@ -82,8 +82,7 @@ class DigitalGpioConnection(gpioController: GpioController,
       eventRouter = eventRouter.removeRoutee(ref)
 
     case stateChanged@StateChanged(pin, state) =>
-      val lastState = lastPinState.getOrElse(pin, false)
-      if (state != lastState) {
+      if (!lastPinState.get(pin).contains(state)) {
         lastPinState += (pin -> state)
         eventRouter.route(stateChanged, self)
       }

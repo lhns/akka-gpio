@@ -47,9 +47,9 @@ class DigitalGpioConnection(gpioController: GpioController,
   object ProvisionedPin {
     def apply(pin: Int, state: Option[Boolean]): ProvisionedPin = {
       val gpioPin: GpioPinDigitalOutput = state match {
-        case Some(high) =>
+        case Some(signal) =>
           val gpioPin = gpioController.provisionDigitalMultipurposePin(pins(pin), output)
-          gpioPin.setState(high)
+          gpioPin.setState(signal ^ inverted)
           gpioPin
 
         case None =>
@@ -85,7 +85,9 @@ class DigitalGpioConnection(gpioController: GpioController,
     case stateChanged@StateChanged(pin, state) =>
       if (!lastPinState.get(pin).contains(state)) {
         lastPinState += (pin -> state)
-        eventRouter.route(stateChanged, self)
+
+        if (eventRouter.routees.nonEmpty)
+          eventRouter.route(stateChanged, self)
       }
 
     case SetState(states) =>

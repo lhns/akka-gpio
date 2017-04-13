@@ -9,19 +9,18 @@ pipeline {
   stages {
     stage('Clean') {
       steps {
-        sh '''sbt -no-colors clean
-'''
-      }
-    }
-    stage('Build') {
-      steps {
         sh '''echo '[repositories]
   local
   artifactory-ivy: http://lolhens.no-ip.org/artifactory/maven-public/, [organization]/[module]/[revision]/[type]s/[artifact](-[classifier]).[ext], bootOnly
   artifactory: http://lolhens.no-ip.org/artifactory/maven-public/
 '>repositories
 '''
-        sh '''sbt -no-colors -Dsbt.repository.config=repositories publish
+        sh 'sbt clean'
+      }
+    }
+    stage('Build') {
+      steps {
+        sh '''sbt publish
 '''
       }
     }
@@ -59,5 +58,8 @@ pipeline {
         )
       }
     }
+  }
+  environment {
+    SBT_OPTS = '-Dsbt.log.noformat=true -Dsbt.repository.config=repositories'
   }
 }

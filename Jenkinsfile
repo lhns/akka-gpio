@@ -9,34 +9,14 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh '''echo '[scala]
-  version: ${sbt.scala.version-auto}
-
-[app]
-  org: ${sbt.organization-org.scala-sbt}
-  name: sbt
-  version: ${sbt.version-read(sbt.version)[0.13.15]}
-  class: ${sbt.main.class-sbt.xMain}
-  components: xsbti,extra
-  cross-versioned: ${sbt.cross.versioned-false}
-  resources: ${sbt.extraClasspath-}
-
+        sh '''echo '
 [repositories]
   local
   Artifactory: http://lolhens.no-ip.org/artifactory/maven-public/
-
-[boot]
-  directory: ${sbt.boot.directory-${sbt.global.base-${user.home}/.sbt}/boot/}
-
-[ivy]
-  ivy-home: ${sbt.ivy.home-${user.home}/.ivy2/}
-  checksums: ${sbt.checksums-sha1,md5}
-  override-build-repos: ${sbt.override.build.repos-false}
-  repository-config: ${sbt.repository.config-${sbt.global.base-${user.home}/.sbt}/repositories}
-'>>sbt.boot.properties
+'>repositories
 
 #sbt -Dsbt.boot.properties="sbt.boot.properties" publish
-sbt -Dsbt.repositories.typesafe-ivy-releases="http://lolhens.no-ip.org/artifactory/maven-public/" publish
+sbt -Dsbt.repository.config=repositories publish
 '''
         archiveArtifacts(artifacts: 'target/releases/*/*/*/*', onlyIfSuccessful: true)
         sh '''ls target/releases/*/*/*/*

@@ -31,6 +31,11 @@ object Gpio extends ExtensionId[GpioExt] with ExtensionIdProvider {
 
   case class StateChanged(pin: Int, state: Boolean) extends Event
 
+  /*
+  Answers with Map[Int, Boolean]
+   */
+  case class GetState(pins: Int*) extends Command
+
 }
 
 class GpioExt(system: ExtendedActorSystem) extends IO.Extension {

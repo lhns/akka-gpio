@@ -4,7 +4,7 @@ import akka.actor.{Actor, ActorRef, ActorRefFactory, Props, Terminated}
 import akka.routing.{BroadcastRoutingLogic, Router}
 import com.pi4j.io.gpio._
 import com.pi4j.io.gpio.event.{GpioPinDigitalStateChangeEvent, GpioPinListenerDigital}
-import org.lolhens.akka.gpio.Gpio.{Register, SetState, StateChanged}
+import org.lolhens.akka.gpio.Gpio.{GetState, Register, SetState, StateChanged}
 
 /**
   * Created by pierr on 07.04.2017.
@@ -71,8 +71,8 @@ class GpioConnection(gpioController: GpioController,
     case stateChanged@StateChanged(pin, state) =>
       val lastState = lastPinState.getOrElse(pin, false)
       if (state != lastState) {
-        eventRouter.route(stateChanged, self)
         lastPinState += (pin -> state)
+        eventRouter.route(stateChanged, self)
       }
 
     case SetState(states) =>
@@ -89,6 +89,9 @@ class GpioConnection(gpioController: GpioController,
 
             self ! StateChanged(pin, state.getOrElse(provisionedPin.isHigh))
         }
+
+    case GetState(pins@_*) =>
+      sender() ! pins.map(pin => pin -> lastPinState.getOrElse(pin, false)).toMap
   }
 }
 

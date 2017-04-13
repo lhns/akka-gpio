@@ -21,7 +21,6 @@ pipeline {
   cross-versioned: ${sbt.cross.versioned-false}
 
 [repositories]
-  local
   Artifactory: http://lolhens.no-ip.org/artifactory/maven-public/
 
 [boot]
@@ -33,7 +32,8 @@ pipeline {
   override-build-repos: ${sbt.override.build.repos-false}
   repository-config: ${sbt.repository.config-${sbt.global.base-${user.home}/.sbt}/repositories}'>>sbt.boot.properties
 
-sbt -Dsbt.boot.properties="sbt.boot.properties" publish'''
+sbt -Dsbt.boot.properties="sbt.boot.properties" publish
+'''
         archiveArtifacts(artifacts: 'target/releases/*/*/*/*', onlyIfSuccessful: true)
         sh '''ls target/releases/*/*/*/*
 echo target/releases/akka-gpio/akka-gpio_2.12/1.0.0'''

@@ -16,6 +16,8 @@ pipeline {
   artifactory: http://lolhens.no-ip.org/artifactory/maven-public/
 '>repositories
 
+printenv
+
 #sbt -Dsbt.boot.properties="sbt.boot.properties" publish
 sbt -Dsbt.repository.config=repositories publish
 '''
@@ -27,15 +29,17 @@ echo target/releases/akka-gpio/akka-gpio_2.12/1.0.0'''
     stage('Deploy') {
       steps {
         script {
-          
           def server = Artifactory.server 'artifactory'
           
           def uploadSpec = """{
             "files": [
               {
-                "pattern": "target/releases/(.*)/.*(jar|pom)",
-                "target": "test/org/lolhens/{1}/",
-                "regexp": "true"
+                "pattern": "target/releases/(*)/*.jar",
+                "target": "test/{1}/"
+              },
+              {
+                "pattern": "target/releases/(*)/*.pom",
+                "target": "test/{1}/"
               }
             ]
           }"""

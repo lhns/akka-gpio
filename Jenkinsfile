@@ -11,7 +11,7 @@ pipeline {
       steps {
         sh 'sbt publish'
         archiveArtifacts(artifacts: 'target/releases/*', onlyIfSuccessful: true, fingerprint: true)
-        sh 'ls target/releases/akka-gpio/akka-gpio_2.12'
+        sh 'ls target/releases/akka-gpio/akka-gpio_2.12/1.0.0'
       }
     }
     stage('Deploy') {

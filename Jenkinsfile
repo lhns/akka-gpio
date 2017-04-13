@@ -38,11 +38,11 @@ pipeline {
                 "files": [
                   {
                     "pattern": "target/releases/(*)/*.jar",
-                    "target": "$(repository)/{1}/"
+                    "target": "${repository}/{1}/"
                   },
                   {
                     "pattern": "target/releases/(*)/*.pom",
-                    "target": "$(repository)/{1}/"
+                    "target": "${repository}/{1}/"
                   }
                 ]
               }"""

@@ -1,5 +1,5 @@
 name := "akka-gpio"
-
+organization := "org.lolhens"
 version := "1.0.0"
 
 scalaVersion := "2.12.1"

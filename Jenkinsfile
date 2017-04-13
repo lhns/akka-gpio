@@ -7,6 +7,22 @@ pipeline {
     
   }
   stages {
+  stage('Clean') {
+      steps {
+        sh '''echo '
+[repositories]
+  local
+  artifactory-ivy: http://lolhens.no-ip.org/artifactory/maven-public/, [organization]/[module]/[revision]/[type]s/[artifact](-[classifier]).[ext], bootOnly
+  artifactory: http://lolhens.no-ip.org/artifactory/maven-public/
+'>repositories
+
+printenv
+
+sbt clean
+#sbt -Dsbt.boot.properties="sbt.boot.properties" publish
+sbt -Dsbt.repository.config=repositories publish
+'''
+}}
     stage('Build') {
       steps {
         sh '''echo '

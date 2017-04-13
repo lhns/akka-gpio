@@ -77,6 +77,7 @@ class DigitalGpioConnection(gpioController: GpioController,
     case Register(ref) =>
       context watch ref
       eventRouter = eventRouter.addRoutee(ref)
+      lastPinState.foreach(pinState => ref ! StateChanged(pinState._1, pinState._2))
 
     case Terminated(ref) =>
       eventRouter = eventRouter.removeRoutee(ref)
@@ -118,5 +119,5 @@ object DigitalGpioConnection {
                           pull: Option[Boolean],
                           inverted: Boolean)
                          (implicit actorRefFactory: ActorRefFactory): ActorRef =
-    actorRefFactory.actorOf(props(gpioController, pins, pull, inverted))
+    actorRefFactory.actorOf(props(gpioController, pins, pull, inverted), "GPIO-Connection")
 }

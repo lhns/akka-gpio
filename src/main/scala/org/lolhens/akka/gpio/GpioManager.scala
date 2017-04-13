@@ -50,5 +50,5 @@ class GpioManager extends Actor {
 object GpioManager {
   private[gpio] val props = Props[GpioManager]
 
-  private[gpio] def actor(implicit actorRefFactory: ActorRefFactory): ActorRef = actorRefFactory.actorOf(props)
+  private[gpio] def actor(implicit actorRefFactory: ActorRefFactory): ActorRef = actorRefFactory.actorOf(props, "IO-GPIO")
 }

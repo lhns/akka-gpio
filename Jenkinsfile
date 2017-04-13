@@ -12,7 +12,8 @@ pipeline {
         sh '''echo '
 [repositories]
   local
-  Artifactory: http://lolhens.no-ip.org/artifactory/maven-public/
+  typesafe-ivy-releases: http://lolhens.no-ip.org/artifactory/typesafe-ivy-releases/
+  artifactory: http://lolhens.no-ip.org/artifactory/maven-public/
 '>repositories
 
 #sbt -Dsbt.boot.properties="sbt.boot.properties" publish

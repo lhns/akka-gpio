@@ -9,7 +9,11 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'sbt publish'
+        sh '''echo [repositories]>>sbt.boot.properties
+echo   local>>sbt.boot.properties
+echo   Artifactory: http://lolhens.no-ip.org/artifactory/maven-public/>>sbt.boot.properties
+
+sbt -Dsbt.boot.properties="sbt.boot.properties" publish'''
         archiveArtifacts(artifacts: 'target/releases/*/*/*/*', onlyIfSuccessful: true)
         sh '''ls target/releases/*/*/*/*
 echo target/releases/akka-gpio/akka-gpio_2.12/1.0.0'''

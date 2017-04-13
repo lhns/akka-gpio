@@ -42,7 +42,7 @@ class GpioConnection(gpioController: GpioController,
     def apply(pin: Int, state: Option[Boolean]): ProvisionedPin = {
       val gpioPin: GpioPinDigitalOutput = state match {
         case Some(high) =>
-          val gpioPin = gpioController.provisionDigitalMultipurposePin(pins(pin), output, pullDown)
+          val gpioPin = gpioController.provisionDigitalMultipurposePin(pins(pin), output)
           gpioPin.setState(high)
           gpioPin
 

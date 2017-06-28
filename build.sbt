@@ -1,8 +1,8 @@
 name := "akka-gpio"
 organization := "org.lolhens"
-version := "1.3.5"
+version := "1.3.6"
 
-scalaVersion := "2.12.1"
+scalaVersion := "2.12.2"
 
 resolvers := Seq("artifactory" at "http://lolhens.no-ip.org/artifactory/maven-public/")
 
